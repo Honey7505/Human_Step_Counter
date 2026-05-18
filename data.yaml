@@ -1,0 +1,12 @@
+train: dataset/train/images
+val: dataset/valid/images
+
+nc: 4
+
+names:
+0: spiderman
+1: ironman
+2: hulk
+3: antman
+4: ironman
+5: black panther

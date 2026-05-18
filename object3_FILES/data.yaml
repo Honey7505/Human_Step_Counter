@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 5
+names: ['antman', 'black panther', 'falcon', 'ironman', 'spiderman']
+
+roboflow:
+  workspace: abhishek-iodpu
+  project: object-detection-ksgku
+  version: 2
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/abhishek-iodpu/object-detection-ksgku/dataset/2

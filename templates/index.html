@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Face Recognition</title>
+
+<style>
+body{margin:0;background:black;font-family:Arial}
+.container{display:flex;height:100vh}
+.video{width:80%;position:relative}
+.video img{width:100%;height:100%;object-fit:cover}
+
+.controls{
+position:absolute;bottom:20px;left:20px
+}
+
+button{
+padding:10px 20px;margin:5px;border:none;
+border-radius:8px;cursor:pointer
+}
+
+.start{background:#00ff99}
+.upload{background:#00ccff}
+.stop{background:red;color:white}
+
+.panel{
+width:20%;background:#111;color:white;
+padding:20px;overflow-y:auto
+}
+
+.card{
+background:#222;margin:10px;padding:10px;
+border-radius:10px;text-align:center
+}
+
+.card img{
+width:70px;height:70px;border-radius:50%;
+object-fit:cover;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="video">
+<img id="feed" src="/video_feed">
+
+<div class="controls">
+<button class="start" onclick="start()">Start</button>
+<button class="upload" onclick="upload()">Upload</button>
+<button class="stop" onclick="stop()">Stop</button>
+<button class="upload" onclick="uploadImage()">Upload Image</button>
+<input type="file" id="imageFile" hidden>
+<input type="text" id="personName" placeholder="Enter Name" style="padding:8px;border-radius:6px;margin-left:10px;">
+<input type="file" id="file" hidden>
+</div>
+
+</div>
+
+<div class="panel">
+<h2>Recognized Faces</h2>
+<div id="faces"></div>
+</div>
+
+</div>
+
+<script>
+
+function start(){
+fetch('/start')
+refresh()
+}
+
+function stop(){
+fetch('/stop')
+}
+
+function upload(){
+document.getElementById('file').click()
+}
+
+function uploadImage(){
+    document.getElementById('imageFile').click()
+}
+function uploadImage(){
+    document.getElementById('imageFile').click()
+}
+
+document.getElementById('imageFile').onchange = function(){
+
+    let file = this.files[0]
+    let name = document.getElementById('personName').value
+
+    if(!file || !name){
+        alert("Enter name + select image")
+        return
+    }
+
+    let formData = new FormData()
+    formData.append("image", file)
+    formData.append("name", name)
+
+    fetch('/upload_image', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.text())
+    .then(msg => {
+        alert(msg)
+        updateFaces()
+    })
+}
+
+document.getElementById('file').onchange = function(){
+let f = new FormData()
+f.append("video", this.files[0])
+
+fetch('/upload',{method:'POST',body:f})
+.then(()=>refresh())
+}
+
+function refresh(){
+document.getElementById('feed').src =
+"/video_feed?"+new Date().getTime()
+}
+
+// ✅ FIXED FUNCTION
+function updateFaces(){
+fetch('/faces')
+.then(r=>r.json())
+.then(data=>{
+
+ console.log("DATA:", data)
+let div=document.getElementById('faces')
+div.innerHTML=""
+
+data.names.forEach(name=>{
+
+let img = data.images[name] /*|| "https://via.placeholder.com/70"*/
+console.log("Name:", name)
+console.log("Image Path:", img)
+div.innerHTML+=`
+<div class="card">
+<img src="${img}" onerror="this.src='/static/faces/default.jpg'">
+<h3>${name}</h3>
+</div>`
+
+})
+
+})
+}
+
+// auto refresh faces
+setInterval(updateFaces,1500)
+
+</script>
+
+</body>
+</html>
