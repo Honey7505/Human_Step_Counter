@@ -8,13 +8,6 @@ fresh_env/
 __pycache__/
 *.pyc
 
-# Videos
-video_upload/
-*.mp4
-*.avi
-
-# Large Static Files
-static/
 
 # Models
 *.pt
