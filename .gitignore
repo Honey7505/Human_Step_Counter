@@ -1,0 +1,21 @@
+# Virtual Environments
+venv/
+pose_env/
+tf_env/
+fresh_env/
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# Videos
+video_upload/
+*.mp4
+*.avi
+
+# Large Static Files
+static/
+
+# Models
+*.pt
+*.pth
